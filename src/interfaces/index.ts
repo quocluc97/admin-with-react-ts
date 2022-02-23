@@ -1,3 +1,5 @@
+import ExportTypography from "antd/lib/typography/Typography";
+
 export interface LoginResult {
     access_token: string;
     username: string;
@@ -61,4 +63,20 @@ export interface OutletQueryFilerInput {
 export class QueryPaginationInput {
     public take?= 10
     public skip?= 0
+}
+
+export interface ItemWithIdAndName {
+    id: number
+    name: string
+}
+
+export interface ChannelItem extends ItemWithIdAndName { }
+export interface ChannelQueryResult {
+    channels: ChannelItem[]
+}
+
+export interface ProvinceItem extends ItemWithIdAndName { }
+
+export interface ProvinceQueryResult {
+    provinces: ProvinceItem[]
 }

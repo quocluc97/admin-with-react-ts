@@ -11,8 +11,9 @@ import {
 import React, { useState } from 'react'
 import Avatar from 'antd/lib/avatar/avatar'
 import Text from 'antd/lib/typography/Text'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../App'
+import { processPathRoute } from '../util/helper'
 
 const { Header, Sider, Content } = Layout
 
@@ -23,11 +24,21 @@ function MainLayout() {
     setCollapsed(!collapsed)
   }
   const auth = useAuth()
+  const location = useLocation()
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo p-3 align-middle text-center">
-          <p className="text-white">{auth.user?.displayName}</p>
+          <p className="text-white">
+            {auth.user?.displayName}
+            {React.createElement(
+              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+              {
+                className: 'pl-5',
+                onClick: toggle,
+              },
+            )}
+          </p>
         </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <Menu.Item key="1" icon={<DashboardOutlined />}>
@@ -43,13 +54,9 @@ function MainLayout() {
       </Sider>
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ padding: 0 }}>
-          {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-            {
-              className: 'trigger',
-              onClick: toggle,
-            },
-          )}
+          <div className="d-flex justify-content-end align-items-center pl-3">
+            <h3>{processPathRoute(location.pathname)}</h3>
+          </div>
         </Header>
         <Content
           className="site-layout-background"

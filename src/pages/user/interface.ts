@@ -15,3 +15,8 @@ export interface UserQueryFilterInput {
     displayName?: FilterOptionsString
     role?: FilterOptionsString
 }
+
+export interface OutletFilterInput {
+    code?: string
+    name?: string
+}

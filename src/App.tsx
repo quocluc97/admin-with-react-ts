@@ -18,7 +18,11 @@ import {
 import React, { useContext, createContext, useState, useEffect } from 'react'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
-import { getUserLogin, setUserLogin } from './util/localStorageHelper'
+import {
+  getUserLogin,
+  removeUserLogin,
+  setUserLogin,
+} from './util/localStorageHelper'
 import Dashboard from './pages/Dashboard'
 import User from './pages/user'
 import LoginLayout from './layouts/LoginLayout'
@@ -107,6 +111,7 @@ function App() {
             case 'UNAUTHENTICATED':
               console.log('UNAUTHENTICATED')
               authProvider.signout(() => {
+                removeUserLogin()
                 setIsAuthenticated(false)
               })
           }

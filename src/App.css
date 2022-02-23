@@ -21,3 +21,7 @@
 .site-layout .site-layout-background {
   background: #fff;
 }
+
+.anticon svg {
+  display: block !important;
+}
