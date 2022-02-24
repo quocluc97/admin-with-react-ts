@@ -14,3 +14,8 @@ query Outlets($pagination: ViewOutletEntityPaginationInput) {
 }
 `
 
+export const ADD_OUTLET = gql`
+mutation CreateOutlet($createOutletInput: CreateOutletInput!) {
+  createOutlet(createOutletInput: $createOutletInput)
+}`
+

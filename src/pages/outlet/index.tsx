@@ -4,7 +4,7 @@ import {
   PlusCircleOutlined,
   SearchOutlined,
 } from '@ant-design/icons'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import {
   Button,
   Card,
@@ -25,7 +25,7 @@ import {
   QueryPaginationInput,
 } from '../../interfaces'
 import { useChannel, processPathRoute, useProvince } from '../../util/helper'
-import { GET_LIST_OUTLET } from './graphql'
+import { ADD_OUTLET, GET_LIST_OUTLET } from './graphql'
 import {
   AddOutletForm,
   OutletQueryPaginationInput,
@@ -41,6 +41,14 @@ function Outlet() {
   const [getListOutlet, { data, loading }] = useLazyQuery<OutletQueryResult>(
     GET_LIST_OUTLET,
   )
+
+  /**
+   * Thêm outlet từ GraphQL
+   */
+  const [
+    addOutlet,
+    { data: addOutletData, loading: addOutletLoading, error: addOutletError },
+  ] = useMutation<any>(ADD_OUTLET)
 
   /**
    * Phân trang trên table
@@ -101,6 +109,17 @@ function Outlet() {
   }, [queryPagination])
 
   /**
+   * Khi addOutletData thay đổi
+   */
+  useEffect(() => {
+    console.log(addOutletData)
+  }, [addOutletData])
+
+  useEffect(() => {
+    console.log(addOutletError)
+  }, [addOutletError])
+  console.log(addOutletError)
+  /**
    * Form finish
    */
   const onFinish = (values: OutletFilterInput) => {
@@ -151,6 +170,15 @@ function Outlet() {
    */
   const handleSubmitFormAddOutlet = (values: AddOutletForm) => {
     console.log(values)
+    console.log(addOutletLoading)
+    console.log(addOutletData)
+    addOutlet({
+      variables: {
+        createOutletInput: values,
+      },
+    })
+    console.log(addOutletData)
+    console.log(addOutletLoading)
   }
   return (
     <>
@@ -251,7 +279,7 @@ function Outlet() {
             <Input type="text" />
           </Form.Item>
 
-          <Form.Item label="Channel" name="channel">
+          <Form.Item label="Channel" name="channelId">
             <Select
               showArrow={true}
               showSearch={true}
@@ -272,7 +300,7 @@ function Outlet() {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Province" name="province">
+          <Form.Item label="Province" name="provinceId">
             <Select
               showArrow={true}
               showSearch={true}
