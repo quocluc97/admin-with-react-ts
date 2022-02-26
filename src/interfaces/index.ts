@@ -1,4 +1,4 @@
-import ExportTypography from "antd/lib/typography/Typography";
+import { NotificationAlertType } from "../enum";
 
 export interface LoginResult {
     access_token: string;
@@ -79,4 +79,15 @@ export interface ProvinceItem extends ItemWithIdAndName { }
 
 export interface ProvinceQueryResult {
     provinces: ProvinceItem[]
+}
+
+export interface NotificationAlert {
+    type: NotificationAlertType;
+    title: string;
+    message: string;
+}
+
+export interface NotificationAlertContextType {
+    alert: NotificationAlert | null
+    setNotificationAlert: (alert: NotificationAlert, callback: void) => void
 }

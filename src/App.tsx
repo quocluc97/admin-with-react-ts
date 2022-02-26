@@ -27,7 +27,12 @@ import Dashboard from './pages/Dashboard'
 import User from './pages/user'
 import LoginLayout from './layouts/LoginLayout'
 import Login from './pages/Login'
-import { AuthContextType, UserLogin } from './interfaces'
+import {
+  AuthContextType,
+  NotificationAlert,
+  NotificationAlertContextType,
+  UserLogin,
+} from './interfaces'
 import Outlet from './pages/outlet'
 // import ProMainLayout from './layouts/ProMainLayout'
 
@@ -45,6 +50,9 @@ const authProvider = {
 }
 
 const AuthContext = createContext<AuthContextType>(null!)
+const NotificationAlertContext = createContext<NotificationAlertContextType>(
+  null!,
+)
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   let [user, setUser] = useState<UserLogin | null>(getUserLogin())
@@ -70,6 +78,24 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
+function NotificationAlertProviver({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  let [alert, setNotification] = useState<NotificationAlert | null>(null)
+
+  let setNotificationAlert = (notification: NotificationAlert) => {
+    // setNotification(notification)
+    console.log(notification)
+  }
+  return (
+    <NotificationAlertContext.Provider value={{ alert, setNotificationAlert }}>
+      {children}
+    </NotificationAlertContext.Provider>
+  )
+}
+
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_DOMAIN + '/graphql',
 })
@@ -86,6 +112,10 @@ const authLink = setContext((_, { headers }) => {
 
 export function useAuth() {
   return useContext(AuthContext)
+}
+
+export function useNotificationAlert() {
+  return useContext(NotificationAlertContext)
 }
 
 function RequireAuth({ children }: { children: JSX.Element }) {
@@ -137,39 +167,41 @@ function App() {
 
   return (
     <AuthProvider>
-      <ApolloProvider client={client}>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route
-              index
-              element={
-                <RequireAuth>
-                  <Dashboard />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="user"
-              element={
-                <RequireAuth>
-                  <User />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="outlet"
-              element={
-                <RequireAuth>
-                  <Outlet />
-                </RequireAuth>
-              }
-            />
-          </Route>
-          <Route path="/login" element={<LoginLayout />}>
-            <Route index element={<Login />} />
-          </Route>
-        </Routes>
-      </ApolloProvider>
+      <NotificationAlertProviver>
+        <ApolloProvider client={client}>
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route
+                index
+                element={
+                  <RequireAuth>
+                    <Dashboard />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="user"
+                element={
+                  <RequireAuth>
+                    <User />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="outlet"
+                element={
+                  <RequireAuth>
+                    <Outlet />
+                  </RequireAuth>
+                }
+              />
+            </Route>
+            <Route path="/login" element={<LoginLayout />}>
+              <Route index element={<Login />} />
+            </Route>
+          </Routes>
+        </ApolloProvider>
+      </NotificationAlertProviver>
     </AuthProvider>
   )
 }

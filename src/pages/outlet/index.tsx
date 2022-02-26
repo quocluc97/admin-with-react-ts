@@ -19,6 +19,8 @@ import {
 } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useNotificationAlert } from '../../App'
+import { NotificationAlertType } from '../../enum'
 import {
   ChannelItem,
   OutletFilterInput,
@@ -47,7 +49,7 @@ function Outlet() {
    */
   const [
     addOutlet,
-    { data: addOutletData, loading: addOutletLoading, error: addOutletError },
+    { data: addOutletData, loading: addOutletLoading, error },
   ] = useMutation<any>(ADD_OUTLET)
 
   /**
@@ -115,10 +117,6 @@ function Outlet() {
     console.log(addOutletData)
   }, [addOutletData])
 
-  useEffect(() => {
-    console.log(addOutletError)
-  }, [addOutletError])
-  console.log(addOutletError)
   /**
    * Form finish
    */
@@ -169,16 +167,20 @@ function Outlet() {
    * Submit form thêm Outlet
    */
   const handleSubmitFormAddOutlet = (values: AddOutletForm) => {
-    console.log(values)
-    console.log(addOutletLoading)
-    console.log(addOutletData)
     addOutlet({
       variables: {
         createOutletInput: values,
       },
     })
-    console.log(addOutletData)
-    console.log(addOutletLoading)
+  }
+  const notificationAlert = useNotificationAlert()
+  if (error) {
+    console.log(error)
+    notificationAlert.setNotificationAlert({
+      type: NotificationAlertType.ERROR,
+      message: 'Thêm Outlet thất bại',
+      title: '',
+    })
   }
   return (
     <>

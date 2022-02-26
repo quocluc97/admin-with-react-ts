@@ -12,7 +12,7 @@ import React, { useState } from 'react'
 import Avatar from 'antd/lib/avatar/avatar'
 import Text from 'antd/lib/typography/Text'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { useAuth } from '../App'
+import { useAuth, useNotificationAlert } from '../App'
 import { processPathRoute } from '../util/helper'
 
 const { Header, Sider, Content } = Layout
@@ -25,6 +25,9 @@ function MainLayout() {
   }
   const auth = useAuth()
   const location = useLocation()
+  const notificationAlert = useNotificationAlert()
+  console.log(notificationAlert.alert)
+
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
