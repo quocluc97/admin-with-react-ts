@@ -19,6 +19,7 @@ import {
 } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { getSystemErrorMap } from 'util'
 import { useNotificationAlert } from '../../App'
 import { NotificationAlertType } from '../../enum'
 import {
@@ -117,6 +118,26 @@ function Outlet() {
     console.log(addOutletData)
   }, [addOutletData])
 
+  const notificationAlert = useNotificationAlert()
+  interface GraphqlResponseError {
+    error: string
+    statusCode: number
+    message: string[]
+  }
+  /**
+   * Khi thêm outlet có lỗi
+   */
+  useEffect(() => {
+    if (error) {
+      const response: any = error.graphQLErrors[0].extensions?.response
+      notificationAlert.setNotificationAlert({
+        type: NotificationAlertType.ERROR,
+        message: response.message.toString(),
+        title: error?.message,
+      })
+    }
+  }, [error])
+
   /**
    * Form finish
    */
@@ -173,15 +194,7 @@ function Outlet() {
       },
     })
   }
-  const notificationAlert = useNotificationAlert()
-  if (error) {
-    console.log(error)
-    notificationAlert.setNotificationAlert({
-      type: NotificationAlertType.ERROR,
-      message: 'Thêm Outlet thất bại',
-      title: '',
-    })
-  }
+
   return (
     <>
       <Form

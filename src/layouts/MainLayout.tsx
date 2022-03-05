@@ -1,4 +1,4 @@
-import { Layout, Menu } from 'antd'
+import { Layout, Menu, Modal } from 'antd'
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -8,25 +8,43 @@ import {
   DashboardOutlined,
   AppstoreOutlined,
 } from '@ant-design/icons'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Avatar from 'antd/lib/avatar/avatar'
 import Text from 'antd/lib/typography/Text'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useAuth, useNotificationAlert } from '../App'
 import { processPathRoute } from '../util/helper'
+import { NotificationAlertType } from '../enum'
 
 const { Header, Sider, Content } = Layout
 
 function MainLayout() {
   const [collapsed, setCollapsed] = useState(false)
-
+  const [modal, contextHolder] = Modal.useModal()
   const toggle = () => {
     setCollapsed(!collapsed)
   }
   const auth = useAuth()
   const location = useLocation()
   const notificationAlert = useNotificationAlert()
-  console.log(notificationAlert.alert)
+  useEffect(() => {
+    const alert = notificationAlert?.alert
+    const config = {
+      title: alert?.title,
+      content: alert?.message,
+    }
+    switch (alert?.type) {
+      case NotificationAlertType.SUCCESS:
+        modal.success(config)
+        break
+      case NotificationAlertType.ERROR:
+        modal.error(config)
+        break
+      case NotificationAlertType.INFO:
+        modal.info(config)
+        break
+    }
+  }, [notificationAlert.alert])
 
   return (
     <Layout>
@@ -72,6 +90,7 @@ function MainLayout() {
           <Outlet />
         </Content>
       </Layout>
+      {contextHolder}
     </Layout>
   )
 }

@@ -86,8 +86,8 @@ function NotificationAlertProviver({
   let [alert, setNotification] = useState<NotificationAlert | null>(null)
 
   let setNotificationAlert = (notification: NotificationAlert) => {
-    // setNotification(notification)
-    console.log(notification)
+    setNotification(notification)
+    // console.log(notification)
   }
   return (
     <NotificationAlertContext.Provider value={{ alert, setNotificationAlert }}>
