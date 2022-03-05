@@ -18,6 +18,7 @@ import {
 import React, { useContext, createContext, useState, useEffect } from 'react'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
+import firebase from "firebase/compat/app";
 import {
   getUserLogin,
   removeUserLogin,
@@ -130,6 +131,11 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 }
 
 function App() {
+  /**
+   * Firebase
+   */
+  const firebaseApp = firebase.apps[0]
+
   const [isAuthenticated, setIsAuthenticated] = useState(true)
   const navigate = useNavigate()
   const errorLink = onError(
