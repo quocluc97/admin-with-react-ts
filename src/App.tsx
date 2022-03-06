@@ -18,7 +18,7 @@ import {
 import React, { useContext, createContext, useState, useEffect } from 'react'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
-import firebase from "firebase/compat/app";
+import firebase from 'firebase/compat/app'
 import {
   getUserLogin,
   removeUserLogin,
@@ -35,8 +35,9 @@ import {
   UserLogin,
 } from './interfaces'
 import Outlet from './pages/outlet'
-// import ProMainLayout from './layouts/ProMainLayout'
-
+import firebaseApp from './firebase'
+// import { getMessaging } from 'firebase/messaging/sw'
+import { getMessaging, onMessage, getToken } from 'firebase/messaging'
 const authProvider = {
   isAuthenticated: false,
   signin(callback: VoidFunction) {
@@ -134,7 +135,22 @@ function App() {
   /**
    * Firebase
    */
-  const firebaseApp = firebase.apps[0]
+
+  const messaging = getMessaging(firebaseApp)
+  getToken(messaging, {
+    vapidKey:
+      'BKI_tuShCVxm36pxA-OBou780j_SfYqgIB-TfFaoJCBHhcjmPPRaFc1CLDVQE-ENo_mxqCtNY6733Q_MCCM5bSk',
+  }).then((text) => console.log(text))
+  // const messaging = getMessaging();
+  onMessage(messaging, (payload) => {
+    console.log('Message received. ', payload);
+    // ...
+  });
+  // const messaging2 = getMessaging()
+  // onMessage(messaging, (payload) => {
+  //   console.log('Message received. ', payload)
+  //   // ...
+  // })
 
   const [isAuthenticated, setIsAuthenticated] = useState(true)
   const navigate = useNavigate()
